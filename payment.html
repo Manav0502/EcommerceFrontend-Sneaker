@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Store - Payment & Checkout</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- header navbar -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="index.html" class="logo-link">
+                    <i class="fa-solid fa-shoe-prints logo-icon"></i>
+                    <span class="logo-text">Nike <span class="logo-highlight">Store</span></span>
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="product.html" class="nav-link">Products</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">More</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" placeholder="Search..." class="search-input">
+                </div>
+                <a href="cart.html" class="icon-btn cart-btn" aria-label="Shopping Cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge">3</span>
+                </a>
+                <div class="profile-avatar">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User Profile" class="avatar-img">
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- payment page content -->
+    <main class="payment-page-main">
+        <div class="payment-container">
+            
+            <h1 class="checkout-title">Checkout</h1>
+
+            <div class="payment-layout">
+                
+                <!-- left container: contact details & payment method -->
+                <div class="payment-left-col">
+                    
+                    <!-- contact details card -->
+                    <div class="checkout-card">
+                        <h2 class="card-title"><i class="fa-solid fa-envelope"></i> Contact Details</h2>
+                        <div class="form-group">
+                            <label for="customerEmail" class="form-label">Email ID</label>
+                            <input type="email" id="customerEmail" placeholder="customer@example.com" class="form-input">
+                        </div>
+                    </div>
+
+                    <!-- payment options card -->
+                    <div class="checkout-card">
+                        <h2 class="card-title"><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
+                        
+                        <!-- payment method selection tabs -->
+                        <div class="payment-methods-tabs">
+                            <button class="method-tab active">
+                                <i class="fa-solid fa-credit-card"></i>
+                                <span>Cards</span>
+                            </button>
+                            <button class="method-tab">
+                                <i class="fa-brands fa-bitcoin"></i>
+                                <span>Crypto</span>
+                            </button>
+                            <button class="method-tab">
+                                <i class="fa-solid fa-building-columns"></i>
+                                <span>Bank</span>
+                            </button>
+                            <button class="method-tab">
+                                <i class="fa-solid fa-mobile-screen-button"></i>
+                                <span>UPI</span>
+                            </button>
+                        </div>
+
+                        <!-- card details form inputs -->
+                        <div class="payment-form">
+                            <div class="form-group">
+                                <label for="cardNumber" class="form-label">Card Number</label>
+                                <input type="text" id="cardNumber" placeholder="1234 5678 9101 1121" class="form-input">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cardExpiry" class="form-label">Expiry</label>
+                                    <input type="text" id="cardExpiry" placeholder="MM/YY" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardCvv" class="form-label">CVV</label>
+                                    <input type="password" id="cardCvv" placeholder="***" class="form-input">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cardCountry" class="form-label">Country</label>
+                                    <select id="cardCountry" class="form-input select-input">
+                                        <option value="India" selected>India</option>
+                                        <option value="United States">United States</option>
+                                        <option value="United Kingdom">United Kingdom</option>
+                                        <option value="Canada">Canada</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardZip" class="form-label">Zip Code</label>
+                                    <input type="text" id="cardZip" placeholder="110001" class="form-input">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- right container: order summary -->
+                <div class="payment-right-col">
+                    <div class="summary-card">
+                        <h2 class="card-title">Order Summary</h2>
+
+                        <!-- coupon code card -->
+                        <div class="coupon-box">
+                            <label for="couponCodePayment" class="coupon-label">Enter Coupon Code</label>
+                            <div class="coupon-input-group">
+                                <input type="text" id="couponCodePayment" placeholder="Enter Coupon Code" class="coupon-input">
+                                <button class="btn-apply-coupon">Apply Coupon</button>
+                            </div>
+                        </div>
+
+                        <!-- breakdown -->
+                        <div class="summary-details">
+                            <div class="summary-row">
+                                <span>Sub Total</span>
+                                <span class="summary-val">₹ 4,002</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Taxes (18% GST)</span>
+                                <span class="summary-val">₹ 720</span>
+                            </div>
+                            <div class="summary-row discount-row">
+                                <span>Discount</span>
+                                <span class="summary-val">- ₹ 223</span>
+                            </div>
+                            <hr class="summary-divider">
+                            <div class="summary-row total-row">
+                                <span>Total</span>
+                                <span class="total-val">₹ 4,499</span>
+                            </div>
+                        </div>
+
+                        <!-- pay now button -->
+                        <button type="submit" class="btn-pay-now">
+                            Pay Now ₹ 4,499
+                        </button>
+
+                        <!-- razorpay trust badges -->
+                        <div class="trust-badge-container">
+                            <div class="secured-tag">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>100% Secure Transaction</span>
+                            </div>
+                            <div class="razorpay-badge-box">
+                                <i class="fa-solid fa-lock"></i>
+                                <span class="razorpay-text">Powered by <strong>Razorpay</strong></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
