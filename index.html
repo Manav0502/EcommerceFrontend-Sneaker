@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike Store - Premium Sneaker Store</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header class="main-header">
+        <nav class="navbar">
+            <!-- Left: Brand Logo -->
+            <div class="nav-logo">
+                <a href="index.html" class="logo-link">
+                    <i class="fa-solid fa-shoe-prints logo-icon"></i>
+                    <span class="logo-text">Nike<span class="logo-highlight"> Store</span></span>
+                </a>
+            </div>
+
+            <!-- Center: Menu Links -->
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link active">Home</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">More</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+            </ul>
+
+            <!-- Right: Search, Cart & User Profile -->
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" placeholder="Search..." class="search-input">
+                </div>
+                <a href="cart.html" class="icon-btn cart-btn" aria-label="Shopping Cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span class="cart-badge">3</span>
+                </a>
+                <div class="profile-avatar">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User Profile" class="avatar-img">
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="landing-main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <!-- Left Div: Copy & CTA -->
+                <div class="hero-content">
+                    <span class="hero-subtag">LATEST COLLECTION</span>
+                    <h1 class="hero-title">Own The Moment <br>Right <span class="hero-highlight">NOW!</span></h1>
+                    <p class="hero-description">
+                        Step into unprecedented comfort and elite performance. Experience engineered flexibility designed for high-impact agility and timeless streetwear aesthetics.
+                    </p>
+                    <a href="product.html" class="btn btn-primary shop-now-btn">
+                        <span>Shop Now</span>
+                        <i class="fa-solid fa-arrow-right-long"></i>
+                    </a>
+                </div>
+
+                <!-- Right Div: Sneaker Image -->
+                <div class="hero-media">
+                    <div class="hero-img-backdrop"></div>
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80" alt="Bagga Bucchi Hero Sneaker" class="hero-shoe-img">
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Overview Section -->
+        <section class="service-overview">
+            <div class="service-container">
+                <div class="service-item">
+                    <div class="service-icon-box">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </div>
+                    <div class="service-details">
+                        <h3 class="service-title">23k+</h3>
+                        <p class="service-text">Reviews</p>
+                    </div>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon-box">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div class="service-details">
+                        <h3 class="service-title">80k+</h3>
+                        <p class="service-text">Customers</p>
+                    </div>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon-box">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="service-details">
+                        <h3 class="service-title">Premium Quality</h3>
+                        <p class="service-text">Guaranteed Standard</p>
+                    </div>
+                </div>
+
+                <div class="service-item">
+                    <div class="service-icon-box">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <div class="service-details">
+                        <h3 class="service-title">4.6/5</h3>
+                        <p class="service-text">Rating</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
