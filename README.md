@@ -35,12 +35,12 @@ The project consists of 4 main interconnected pages:
 ---
 
 ## 📁 File Structure
-├── index.html # Landing page / Homepage<br>
-├── product.html # Product details & image gallery page<br>
-├── cart.html # Shopping cart & coupon page<br>
-├── payment.html # Payment checkout page<br>
-├── style.css # Unified master CSS stylesheet for all 4 pages<br>
-└── README.md # Project documentation<br>
+├── index.html # Landing page / Homepage
+├── product.html # Product details & image gallery page
+├── cart.html # Shopping cart & coupon page
+├── payment.html # Payment checkout page
+├── style.css # Unified master CSS stylesheet for all 4 pages
+└── README.md # Project documentation
 
 ---
 
