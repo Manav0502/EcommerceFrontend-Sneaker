@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nike Store - Payment & Checkout</title>
+    <title>Nike Store - Checkout & Payment</title>
 
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -12,13 +12,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Stylesheet -->
+    <!-- Main Stylesheet & Script -->
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="images/logo.png" type="image/x-icon">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <!-- header navbar -->
+    <!-- Header Navigation Bar -->
     <header class="main-header">
         <nav class="navbar">
             <div class="nav-logo">
@@ -28,13 +28,15 @@
                 </a>
             </div>
 
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="product.html" class="nav-link">Products</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">More</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
-            </ul>
+            <div class="nav-menu-wrapper">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="product.html" class="nav-link">Products</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">More</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
 
             <div class="nav-actions">
                 <div class="search-box">
@@ -43,16 +45,18 @@
                 </div>
                 <a href="cart.html" class="icon-btn cart-btn" aria-label="Shopping Cart">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="cart-badge">3</span>
+                    <span class="cart-badge">0</span>
                 </a>
                 <div class="profile-avatar">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User Profile" class="avatar-img">
                 </div>
+                <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
         </nav>
     </header>
 
-    <!-- payment page content -->
     <main class="payment-page-main">
         <div class="payment-container">
             
@@ -60,57 +64,53 @@
 
             <div class="payment-layout">
                 
-                <!-- left container: contact details & payment method -->
                 <div class="payment-left-col">
                     
-                    <!-- contact details card -->
                     <div class="checkout-card">
                         <h2 class="card-title"><i class="fa-solid fa-envelope"></i> Contact Details</h2>
                         <div class="form-group">
-                            <label for="customerEmail" class="form-label">Email ID</label>
+                            <label for="customerEmail" class="form-label">Email Address *</label>
                             <input type="email" id="customerEmail" placeholder="customer@example.com" class="form-input">
                         </div>
                     </div>
 
-                    <!-- payment options card -->
                     <div class="checkout-card">
                         <h2 class="card-title"><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
                         
-                        <!-- payment method selection tabs -->
                         <div class="payment-methods-tabs">
-                            <button class="method-tab active">
+                            <button class="method-tab active" data-method="cards">
                                 <i class="fa-solid fa-credit-card"></i>
                                 <span>Cards</span>
                             </button>
-                            <button class="method-tab">
+                            <button class="method-tab" data-method="crypto">
                                 <i class="fa-brands fa-bitcoin"></i>
                                 <span>Crypto</span>
                             </button>
-                            <button class="method-tab">
+                            <button class="method-tab" data-method="bank">
                                 <i class="fa-solid fa-building-columns"></i>
                                 <span>Bank</span>
                             </button>
-                            <button class="method-tab">
+                            <button class="method-tab" data-method="upi">
                                 <i class="fa-solid fa-mobile-screen-button"></i>
                                 <span>UPI</span>
                             </button>
                         </div>
 
-                        <!-- card details form inputs -->
-                        <div class="payment-form">
+                        <!-- PANEL 1: CARDS -->
+                        <div class="payment-panel active-panel" id="panel-cards">
                             <div class="form-group">
-                                <label for="cardNumber" class="form-label">Card Number</label>
-                                <input type="text" id="cardNumber" placeholder="1234 5678 9101 1121" class="form-input">
+                                <label for="cardNumber" class="form-label">Card Number (Exactly 16 Digits) *</label>
+                                <input type="text" id="cardNumber" placeholder="1234 5678 9101 1121" maxlength="19" class="form-input">
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="cardExpiry" class="form-label">Expiry</label>
-                                    <input type="text" id="cardExpiry" placeholder="MM/YY" class="form-input">
+                                    <label for="cardExpiry" class="form-label">Expiry (MM/YY) *</label>
+                                    <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" class="form-input">
                                 </div>
                                 <div class="form-group">
-                                    <label for="cardCvv" class="form-label">CVV</label>
-                                    <input type="password" id="cardCvv" placeholder="***" class="form-input">
+                                    <label for="cardCvv" class="form-label">CVV (3 Digits) *</label>
+                                    <input type="password" id="cardCvv" placeholder="123" maxlength="3" class="form-input">
                                 </div>
                             </div>
 
@@ -121,13 +121,65 @@
                                         <option value="India" selected>India</option>
                                         <option value="United States">United States</option>
                                         <option value="United Kingdom">United Kingdom</option>
-                                        <option value="Canada">Canada</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cardZip" class="form-label">Zip Code</label>
-                                    <input type="text" id="cardZip" placeholder="110001" class="form-input">
+                                    <label for="cardZip" class="form-label">Zip Code (6 Digits) *</label>
+                                    <input type="text" id="cardZip" placeholder="110001" maxlength="6" class="form-input">
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 2: CRYPTO -->
+                        <div class="payment-panel" id="panel-crypto">
+                            <div class="crypto-address-box">
+                                <div class="crypto-addr-title"><i class="fa-brands fa-ethereum"></i> Store Crypto Wallet:</div>
+                                <div class="crypto-addr-value">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cryptoSelect" class="form-label">Select Cryptocurrency *</label>
+                                <select id="cryptoSelect" class="form-input select-input">
+                                    <option value="" disabled selected>Choose Crypto...</option>
+                                    <option value="BTC">Bitcoin (BTC)</option>
+                                    <option value="ETH">Ethereum (ETH)</option>
+                                    <option value="USDT">Tether (USDT TRC20)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cryptoTxInput" class="form-label">Wallet Address / TxID *</label>
+                                <input type="text" id="cryptoTxInput" placeholder="Enter your transaction hash or wallet address" class="form-input">
+                                <span class="helper-hint">Minimum 8 characters required</span>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 3: BANK / NET BANKING -->
+                        <div class="payment-panel" id="panel-bank">
+                            <div class="form-group">
+                                <label for="bankSelect" class="form-label">Select Net Banking Bank *</label>
+                                <select id="bankSelect" class="form-input select-input">
+                                    <option value="" disabled selected>Select Bank...</option>
+                                    <option value="sbi">State Bank of India (SBI)</option>
+                                    <option value="hdfc">HDFC Bank</option>
+                                    <option value="icici">ICICI Bank</option>
+                                    <option value="axis">Axis Bank</option>
+                                    <option value="other">Other Bank...</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" id="otherBankGroup" style="display: none;">
+                                <label for="otherBankName" class="form-label">Type Bank Name *</label>
+                                <input type="text" id="otherBankName" placeholder="Enter your bank name" class="form-input">
+                            </div>
+                        </div>
+
+                        <!-- PANEL 4: UPI -->
+                        <div class="payment-panel" id="panel-upi">
+                            <div class="form-group">
+                                <label for="upiIdInput" class="form-label">Enter Virtual Payment Address (UPI ID) *</label>
+                                <input type="text" id="upiIdInput" placeholder="e.g. username@upi or mobile@paytm" class="form-input">
+                                <span class="helper-hint">Must contain @ symbol (e.g. user@okicici)</span>
                             </div>
                         </div>
 
@@ -135,47 +187,34 @@
 
                 </div>
 
-                <!-- right container: order summary -->
                 <div class="payment-right-col">
                     <div class="summary-card">
                         <h2 class="card-title">Order Summary</h2>
 
-                        <!-- coupon code card -->
-                        <div class="coupon-box">
-                            <label for="couponCodePayment" class="coupon-label">Enter Coupon Code</label>
-                            <div class="coupon-input-group">
-                                <input type="text" id="couponCodePayment" placeholder="Enter Coupon Code" class="coupon-input">
-                                <button class="btn-apply-coupon">Apply Coupon</button>
-                            </div>
-                        </div>
-
-                        <!-- breakdown -->
                         <div class="summary-details">
                             <div class="summary-row">
                                 <span>Sub Total</span>
-                                <span class="summary-val">₹ 4,002</span>
+                                <span class="summary-val summary-subtotal">₹ 0</span>
                             </div>
                             <div class="summary-row">
                                 <span>Taxes (18% GST)</span>
-                                <span class="summary-val">₹ 720</span>
+                                <span class="summary-val summary-tax">₹ 0</span>
                             </div>
                             <div class="summary-row discount-row">
                                 <span>Discount</span>
-                                <span class="summary-val">- ₹ 223</span>
+                                <span class="summary-val summary-discount">- ₹ 0</span>
                             </div>
                             <hr class="summary-divider">
                             <div class="summary-row total-row">
                                 <span>Total</span>
-                                <span class="total-val">₹ 4,499</span>
+                                <span class="total-val">₹ 0</span>
                             </div>
                         </div>
 
-                        <!-- pay now button -->
-                        <button type="submit" class="btn-pay-now">
-                            Pay Now ₹ 4,499
+                        <button type="button" id="payNowBtn" class="btn-pay-now" disabled>
+                            Pay Now <span class="pay-now-amount">₹ 0</span>
                         </button>
 
-                        <!-- razorpay trust badges -->
                         <div class="trust-badge-container">
                             <div class="secured-tag">
                                 <i class="fa-solid fa-shield-halved"></i>
