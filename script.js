@@ -1,29 +1,21 @@
 /**
- * Nike Store - Core Vanilla JavaScript Application
+ * Nike Store - Simple Vanilla JavaScript Application
  * Features:
- * - Cart starts at 0 by default. Items added increment the counter dynamically.
- * - LocalStorage cart persistence & real-time badge updates.
- * - Dynamic sliding tab indicator in main navbar.
- * - Strict payment validation rules:
- *   - Card Number: Exactly 16 digits.
- *   - CVV: Exactly 3 digits.
- *   - Zip Code: Exactly 6 digits.
- *   - Expiry Date: MM/YY format.
- * - Tab-aware Checkout validation for Cards, Crypto, Net Banking, and UPI methods.
- * - Disables/fades "Pay Now" button until active tab requirements pass.
+ * - LocalStorage cart management (defaults to 0 items).
+ * - Live input validation with text error messages under fields.
+ * - Tab-aware payment validation (Cards, Crypto, Bank, UPI).
+ * - Smooth product gallery transitions.
+ * - Simulated payment processing modal with generated transaction receipt.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    initApp();
-});
+// Global key for cart storage
+const CART_KEY = 'nike_cart_student_v1';
 
-// --- Main App Initializer ---
-function initApp() {
-    initCartState();
-    initSlidingNavbar();
-    initMobileNav();
-    initToastContainer();
+document.addEventListener('DOMContentLoaded', function() {
+    initNavbar();
+    updateCartBadge();
 
+    // Route based on current page
     if (document.querySelector('.product-page-main')) {
         initProductPage();
     }
@@ -33,58 +25,44 @@ function initApp() {
     if (document.querySelector('.payment-page-main')) {
         initPaymentPage();
     }
+});
+
+// --- 1. Cart LocalStorage Functions ---
+function getCartItems() {
+    const data = localStorage.getItem(CART_KEY);
+    return data ? JSON.parse(data) : []; // Default empty array (0 items)
 }
 
-// ==========================================
-// 1. Cart State Management (LocalStorage)
-// ==========================================
-const CART_STORAGE_KEY = 'nike_store_cart_v2';
-const DEFAULT_PRODUCT = {
-    id: 'nike-alpha-5',
-    title: 'Nike Air Max Alpha Trainer 5',
-    color: 'Red',
-    price: 1334,
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80'
-};
-
-// Returns cart array. Defaults to empty [] (0 items)
-function getCart() {
-    const rawData = localStorage.getItem(CART_STORAGE_KEY);
-    if (!rawData) {
-        return []; // Cart starts at 0 by default
-    }
-    return JSON.parse(rawData);
-}
-
-function saveCart(cart) {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
-    updateCartBadge();
-}
-
-function initCartState() {
+function saveCartItems(cart) {
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
     updateCartBadge();
 }
 
 function updateCartBadge() {
-    const cart = getCart();
-    const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const badges = document.querySelectorAll('.cart-badge');
+    const cart = getCartItems();
+    let totalQty = 0;
+    for (let i = 0; i < cart.length; i++) {
+        totalQty += cart[i].quantity;
+    }
 
+    const badges = document.querySelectorAll('.cart-badge');
     badges.forEach(badge => {
-        badge.textContent = totalCount;
-        badge.classList.remove('pop-anim');
-        void badge.offsetWidth; // Trigger DOM reflow for animation reset
-        badge.classList.add('pop-anim');
+        badge.textContent = totalQty;
     });
 }
 
-// ==========================================
-// 2. Sliding Navbar Indicator
-// ==========================================
-function initSlidingNavbar() {
+// --- 2. Navbar Sliding Underline & Mobile Toggle ---
+function initNavbar() {
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
-    
+    const mobileBtn = document.querySelector('.mobile-nav-toggle');
+
+    if (mobileBtn && navMenu) {
+        mobileBtn.addEventListener('click', function() {
+            navMenu.classList.toggle('mobile-open');
+        });
+    }
+
     if (!navMenu || navLinks.length === 0) return;
 
     let indicator = document.querySelector('.nav-indicator');
@@ -94,428 +72,467 @@ function initSlidingNavbar() {
         navMenu.appendChild(indicator);
     }
 
-    function positionIndicator(target) {
-        if (!target) return;
-        const rect = target.getBoundingClientRect();
+    function moveIndicator(linkElement) {
+        if (!linkElement) return;
+        const rect = linkElement.getBoundingClientRect();
         const parentRect = navMenu.getBoundingClientRect();
         
-        indicator.style.left = `${rect.left - parentRect.left}px`;
-        indicator.style.width = `${rect.width}px`;
+        indicator.style.left = (rect.left - parentRect.left) + 'px';
+        indicator.style.width = rect.width + 'px';
         indicator.style.opacity = '1';
     }
 
     const activeLink = document.querySelector('.nav-link.active') || navLinks[0];
-    positionIndicator(activeLink);
+    moveIndicator(activeLink);
 
     navLinks.forEach(link => {
-        link.addEventListener('mouseenter', (e) => positionIndicator(e.target));
-    });
-
-    navMenu.addEventListener('mouseleave', () => {
-        const currentActive = document.querySelector('.nav-link.active') || navLinks[0];
-        positionIndicator(currentActive);
-    });
-
-    window.addEventListener('resize', () => {
-        const currentActive = document.querySelector('.nav-link.active') || navLinks[0];
-        positionIndicator(currentActive);
-    });
-}
-
-function initMobileNav() {
-    const toggleBtn = document.querySelector('.mobile-nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-
-    if (toggleBtn && navMenu) {
-        toggleBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('mobile-open');
+        link.addEventListener('mouseenter', function(e) {
+            moveIndicator(e.target);
         });
-    }
+    });
+
+    navMenu.addEventListener('mouseleave', function() {
+        const currentActive = document.querySelector('.nav-link.active') || navLinks[0];
+        moveIndicator(currentActive);
+    });
 }
 
-// ==========================================
-// 3. Toast Feedback System
-// ==========================================
-function initToastContainer() {
-    if (!document.querySelector('.toast-container')) {
-        const container = document.createElement('div');
+// --- 3. Toast Notifications ---
+function showToast(msg) {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
         container.className = 'toast-container';
         document.body.appendChild(container);
     }
-}
-
-function showToast(message) {
-    const container = document.querySelector('.toast-container');
-    if (!container) return;
 
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<i class="fa-solid fa-circle-check toast-icon"></i> <span>${message}</span>`;
+    toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>${msg}</span>`;
     container.appendChild(toast);
 
-    setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
+        toast.remove();
     }, 2500);
 }
 
-// ==========================================
-// 4. Product Page Logic (product.html)
-// ==========================================
+// --- 4. Product Page Logic (product.html) ---
 function initProductPage() {
     const qtyDisplay = document.querySelector('.qty-display');
-    const qtyMinusBtn = document.querySelector('.qty-btn-minus');
-    const qtyPlusBtn = document.querySelector('.qty-btn-plus');
-    const addToCartBtn = document.querySelector('.btn-add-cart');
-    const galleryCards = document.querySelectorAll('.gallery-card');
+    const minusBtn = document.querySelector('.qty-btn-minus');
+    const plusBtn = document.querySelector('.qty-btn-plus');
+    const addBtn = document.querySelector('.btn-add-cart');
+    const galleryThumbs = document.querySelectorAll('.gallery-card');
     const mainImg = document.querySelector('.product-main-img');
 
-    let selectedQty = 1;
+    let currentQty = 1;
 
-    if (qtyMinusBtn && qtyPlusBtn && qtyDisplay) {
-        qtyDisplay.textContent = selectedQty;
-
-        qtyMinusBtn.addEventListener('click', () => {
-            if (selectedQty > 1) {
-                selectedQty--;
-                qtyDisplay.textContent = selectedQty;
+    if (minusBtn && plusBtn && qtyDisplay) {
+        minusBtn.addEventListener('click', function() {
+            if (currentQty > 1) {
+                currentQty--;
+                qtyDisplay.textContent = currentQty;
             }
         });
 
-        qtyPlusBtn.addEventListener('click', () => {
-            if (selectedQty < 10) {
-                selectedQty++;
-                qtyDisplay.textContent = selectedQty;
+        plusBtn.addEventListener('click', function() {
+            if (currentQty < 10) {
+                currentQty++;
+                qtyDisplay.textContent = currentQty;
             }
         });
     }
 
-    // Add to Cart
-    if (addToCartBtn) {
-        addToCartBtn.addEventListener('click', () => {
-            const cart = getCart();
-            const existingIndex = cart.findIndex(item => item.id === DEFAULT_PRODUCT.id);
+    // Add to Cart Action
+    if (addBtn) {
+        addBtn.addEventListener('click', function() {
+            const cart = getCartItems();
+            const product = {
+                id: 'nike-alpha-5',
+                title: 'Nike Air Max Alpha Trainer 5',
+                color: 'Red',
+                price: 1334,
+                quantity: currentQty,
+                image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80'
+            };
 
-            if (existingIndex > -1) {
-                cart[existingIndex].quantity += selectedQty;
-            } else {
-                cart.push({ ...DEFAULT_PRODUCT, quantity: selectedQty });
+            let found = false;
+            for (let i = 0; i < cart.length; i++) {
+                if (cart[i].id === product.id) {
+                    cart[i].quantity += currentQty;
+                    found = true;
+                    break;
+                }
             }
 
-            saveCart(cart);
-            showToast(`Added ${selectedQty} pair(s) to your cart!`);
+            if (!found) {
+                cart.push(product);
+            }
+
+            saveCartItems(cart);
+            showToast(`Added ${currentQty} item(s) to cart!`);
         });
     }
 
-    // Gallery Thumbnails
-    galleryCards.forEach(card => {
-        card.addEventListener('click', () => {
-            galleryCards.forEach(c => c.classList.remove('active-thumb'));
-            card.classList.add('active-thumb');
-            const imgInside = card.querySelector('img');
-            if (imgInside && mainImg) {
-                mainImg.src = imgInside.src;
+    // Gallery Image Switcher with Fade Animation
+    galleryThumbs.forEach(thumb => {
+        thumb.addEventListener('click', function() {
+            galleryThumbs.forEach(t => t.classList.remove('active-thumb'));
+            thumb.classList.add('active-thumb');
+
+            const clickedImg = thumb.querySelector('img');
+            if (clickedImg && mainImg) {
+                // Apply fade out class
+                mainImg.classList.add('fade-out');
+                setTimeout(() => {
+                    mainImg.src = clickedImg.src;
+                    mainImg.classList.remove('fade-out');
+                }, 200);
             }
         });
     });
 }
 
-// ==========================================
-// 5. Cart Page Logic (cart.html)
-// ==========================================
-let activeDiscount = 0;
+// --- 5. Cart Page Logic (cart.html) ---
+let appliedDiscount = 0;
 
 function initCartPage() {
-    renderCartTable();
-    initCouponSystem();
+    renderCart();
+    initCoupons();
 }
 
-function renderCartTable() {
-    const cart = getCart();
+function renderCart() {
+    const cart = getCartItems();
     const tableBody = document.querySelector('.cart-table tbody');
-    const cartLeftCol = document.querySelector('.cart-left-col');
+    const leftCol = document.querySelector('.cart-left-col');
 
-    if (!cartLeftCol) return;
+    if (!leftCol) return;
 
     if (cart.length === 0) {
-        cartLeftCol.innerHTML = `
+        leftCol.innerHTML = `
             <div class="empty-cart-view">
                 <i class="fa-solid fa-cart-flatbed empty-cart-icon"></i>
-                <h3 class="empty-cart-title">Your Cart is Currently Empty</h3>
-                <p class="empty-cart-text">Explore our collection and add your favorite sneakers to get started.</p>
-                <a href="product.html" class="shop-now-btn" style="display:inline-flex;">
-                    <span>Browse Products</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
+                <h3 style="font-family: var(--font-heading); font-size:1.4rem; margin-bottom:0.5rem;">Your Cart is Empty</h3>
+                <p style="color:var(--text-muted); margin-bottom:1.5rem;">Add some shoes to start your purchase.</p>
+                <a href="product.html" class="shop-now-btn" style="display:inline-flex;">Browse Products</a>
             </div>
         `;
-        updateSummaryCalculations(0);
+        updatePriceSummary(0);
         return;
     }
 
     if (tableBody) {
-        tableBody.innerHTML = cart.map((item, index) => `
-            <tr>
-                <td class="product-cell">
-                    <img src="${item.image}" alt="${item.title}" class="cart-item-img">
-                    <div class="cart-item-meta">
-                        <h4 class="cart-item-title">${item.title}</h4>
-                        <span class="cart-item-color">Color: ${item.color}</span>
-                    </div>
-                </td>
-                <td class="quantity-cell">
-                    <div class="interactive-qty-box">
-                        <button class="qty-btn" onclick="updateItemQty(${index}, -1)">-</button>
-                        <span class="qty-display">${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateItemQty(${index}, 1)">+</button>
-                    </div>
-                </td>
-                <td class="price-cell">₹ ${(item.price * item.quantity).toLocaleString('en-IN')}</td>
-                <td class="remove-cell">
-                    <button class="remove-btn" onclick="removeCartItem(${index})" aria-label="Remove item">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
+        let html = '';
+        for (let i = 0; i < cart.length; i++) {
+            const item = cart[i];
+            html += `
+                <tr>
+                    <td class="product-cell">
+                        <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+                        <div>
+                            <h4 style="font-size:0.95rem; font-weight:700;">${item.title}</h4>
+                            <span style="font-size:0.8rem; color:var(--text-muted);">Color: ${item.color}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="interactive-qty-box">
+                            <button class="qty-btn" onclick="changeQty(${i}, -1)">-</button>
+                            <span class="qty-display">${item.quantity}</span>
+                            <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td style="font-weight:700; color:var(--primary-dark);">₹ ${(item.price * item.quantity).toLocaleString('en-IN')}</td>
+                    <td>
+                        <button class="remove-btn" onclick="removeItem(${i})"><i class="fa-solid fa-xmark"></i></button>
+                    </td>
+                </tr>
+            `;
+        }
+        tableBody.innerHTML = html;
     }
 
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    updateSummaryCalculations(subtotal);
+    let subtotal = 0;
+    for (let i = 0; i < cart.length; i++) {
+        subtotal += cart[i].price * cart[i].quantity;
+    }
+    updatePriceSummary(subtotal);
 }
 
-function updateItemQty(index, change) {
-    const cart = getCart();
+function changeQty(index, change) {
+    const cart = getCartItems();
     if (cart[index]) {
         cart[index].quantity += change;
         if (cart[index].quantity <= 0) {
             cart.splice(index, 1);
         }
-        saveCart(cart);
-        renderCartTable();
+        saveCartItems(cart);
+        renderCart();
     }
 }
 
-function removeCartItem(index) {
-    const cart = getCart();
+function removeItem(index) {
+    const cart = getCartItems();
     if (cart[index]) {
         cart.splice(index, 1);
-        saveCart(cart);
-        renderCartTable();
-        showToast('Item removed from cart');
+        saveCartItems(cart);
+        renderCart();
+        showToast('Item removed from cart.');
     }
 }
 
-function updateSummaryCalculations(subtotal) {
-    const tax = subtotal > 0 ? Math.round(subtotal * 0.18) : 0; // 18% GST
-    const grandTotal = Math.max(0, subtotal + tax - activeDiscount);
+function updatePriceSummary(subtotal) {
+    const gst = subtotal > 0 ? Math.round(subtotal * 0.18) : 0;
+    const total = Math.max(0, subtotal + gst - appliedDiscount);
 
-    const subtotalElem = document.querySelector('.summary-subtotal');
-    const taxElem = document.querySelector('.summary-tax');
-    const discountElem = document.querySelector('.summary-discount');
-    const totalElems = document.querySelectorAll('.total-val, .pay-now-amount');
+    const subtotalEl = document.querySelector('.summary-subtotal');
+    const taxEl = document.querySelector('.summary-tax');
+    const discountEl = document.querySelector('.summary-discount');
+    const totalEls = document.querySelectorAll('.total-val, .pay-now-amount');
 
-    if (subtotalElem) subtotalElem.textContent = `₹ ${subtotal.toLocaleString('en-IN')}`;
-    if (taxElem) taxElem.textContent = `₹ ${tax.toLocaleString('en-IN')}`;
-    if (discountElem) discountElem.textContent = `- ₹ ${activeDiscount.toLocaleString('en-IN')}`;
-    
-    totalElems.forEach(el => {
-        el.textContent = `₹ ${grandTotal.toLocaleString('en-IN')}`;
+    if (subtotalEl) subtotalEl.textContent = `₹ ${subtotal.toLocaleString('en-IN')}`;
+    if (taxEl) taxEl.textContent = `₹ ${gst.toLocaleString('en-IN')}`;
+    if (discountEl) discountEl.textContent = `- ₹ ${appliedDiscount.toLocaleString('en-IN')}`;
+
+    totalEls.forEach(el => {
+        el.textContent = `₹ ${total.toLocaleString('en-IN')}`;
     });
 }
 
-function initCouponSystem() {
+function initCoupons() {
     const applyBtn = document.querySelector('.btn-apply-coupon');
-    const couponInput = document.querySelector('.coupon-input');
+    const input = document.querySelector('.coupon-input');
 
-    if (applyBtn && couponInput) {
-        applyBtn.addEventListener('click', () => {
-            const code = couponInput.value.trim().toUpperCase();
-            if (code === 'NIKE10' || code === 'SAVE200') {
-                activeDiscount = 223;
-                showToast('Coupon applied! (₹ 223 Discount)');
-            } else if (code === '') {
-                showToast('Please enter a promo code.');
+    if (applyBtn && input) {
+        applyBtn.addEventListener('click', function() {
+            const val = input.value.trim().toUpperCase();
+            if (val === 'NIKE10' || val === 'SAVE200') {
+                appliedDiscount = 223;
+                showToast('Promo code applied! (₹ 223 OFF)');
+            } else if (val === '') {
+                showToast('Please enter a coupon code.');
                 return;
             } else {
-                showToast('Invalid Code. Use NIKE10');
-                activeDiscount = 0;
+                showToast('Invalid code. Try NIKE10');
+                appliedDiscount = 0;
             }
-            const cart = getCart();
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            updateSummaryCalculations(subtotal);
+
+            const cart = getCartItems();
+            let subtotal = 0;
+            for (let i = 0; i < cart.length; i++) {
+                subtotal += cart[i].price * cart[i].quantity;
+            }
+            updatePriceSummary(subtotal);
         });
     }
 }
 
-// ==========================================
-// 6. Checkout & Payment Logic (payment.html)
-// ==========================================
+// --- 6. Checkout Page Validation & Simulation (payment.html) ---
 function initPaymentPage() {
     const emailInput = document.getElementById('customerEmail');
     const payBtn = document.getElementById('payNowBtn');
-    const methodTabs = document.querySelectorAll('.method-tab');
-    const paymentPanels = document.querySelectorAll('.payment-panel');
+    const tabs = document.querySelectorAll('.method-tab');
+    const panels = document.querySelectorAll('.payment-panel');
 
-    // Inputs for Tab 1: Cards
-    const cardNumInput = document.getElementById('cardNumber');
-    const expiryInput = document.getElementById('cardExpiry');
-    const cvvInput = document.getElementById('cardCvv');
-    const zipInput = document.getElementById('cardZip');
+    // Cards Inputs
+    const cardNum = document.getElementById('cardNumber');
+    const cardExp = document.getElementById('cardExpiry');
+    const cardCvv = document.getElementById('cardCvv');
+    const cardZip = document.getElementById('cardZip');
 
-    // Inputs for Tab 2: Crypto
+    // Crypto Inputs
     const cryptoSelect = document.getElementById('cryptoSelect');
-    const cryptoTxInput = document.getElementById('cryptoTxInput');
+    const cryptoTx = document.getElementById('cryptoTxInput');
 
-    // Inputs for Tab 3: Bank
+    // Bank Inputs
     const bankSelect = document.getElementById('bankSelect');
     const otherBankInput = document.getElementById('otherBankName');
     const otherBankGroup = document.getElementById('otherBankGroup');
 
-    // Inputs for Tab 4: UPI
-    const upiIdInput = document.getElementById('upiIdInput');
+    // UPI Inputs
+    const upiInput = document.getElementById('upiIdInput');
 
-    let currentActiveTab = 'cards';
+    let activeTab = 'cards';
 
-    // Calculate dynamic cart totals
-    const cart = getCart();
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    updateSummaryCalculations(subtotal);
+    // Calculate cart total
+    const cart = getCartItems();
+    let subtotal = 0;
+    for (let i = 0; i < cart.length; i++) {
+        subtotal += cart[i].price * cart[i].quantity;
+    }
+    updatePriceSummary(subtotal);
 
-    // Dynamic Tab Switching
-    methodTabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
+    // Tab Switcher
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
             e.preventDefault();
-            methodTabs.forEach(t => t.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
-            currentActiveTab = tab.dataset.method;
+            activeTab = tab.dataset.method;
 
-            paymentPanels.forEach(panel => {
-                if (panel.id === `panel-${currentActiveTab}`) {
+            panels.forEach(panel => {
+                if (panel.id === 'panel-' + activeTab) {
                     panel.classList.add('active-panel');
                 } else {
                     panel.classList.remove('active-panel');
                 }
             });
 
-            validateFormByActiveTab();
+            validateForm();
         });
     });
 
-    // Toggle "Other Bank" extra input
     if (bankSelect && otherBankGroup) {
-        bankSelect.addEventListener('change', () => {
+        bankSelect.addEventListener('change', function() {
             if (bankSelect.value === 'other') {
                 otherBankGroup.style.display = 'flex';
             } else {
                 otherBankGroup.style.display = 'none';
             }
-            validateFormByActiveTab();
+            validateForm();
         });
     }
 
-    // --- Strict Validation Helper Functions ---
-    function isEmailValid() {
-        return emailInput && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-    }
+    // Error message helper
+    function toggleError(inputEl, errorId, isValid, msg) {
+        const errorEl = document.getElementById(errorId);
+        if (!inputEl) return;
 
-    function isCardValid() {
-        if (!cardNumInput) return false;
-        const digitsOnly = cardNumInput.value.replace(/\D/g, '');
-        return digitsOnly.length === 16; // STRICT: exactly 16 digits
-    }
-
-    function isExpiryValid() {
-        return expiryInput && /^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryInput.value.trim());
-    }
-
-    function isCvvValid() {
-        if (!cvvInput) return false;
-        const val = cvvInput.value.trim();
-        return val.length === 3 && /^\d{3}$/.test(val); // STRICT: exactly 3 digits
-    }
-
-    function isZipValid() {
-        if (!zipInput) return false;
-        const val = zipInput.value.trim();
-        return val.length === 6 && /^\d{6}$/.test(val); // STRICT: exactly 6 digits
-    }
-
-    function isUpiValid() {
-        if (!upiIdInput) return false;
-        const val = upiIdInput.value.trim();
-        return /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(val); // e.g. name@upi
-    }
-
-    function isCryptoValid() {
-        const hasCryptoSelected = cryptoSelect && cryptoSelect.value !== '';
-        const hasTx = cryptoTxInput && cryptoTxInput.value.trim().length >= 8;
-        return hasCryptoSelected && hasTx;
-    }
-
-    function isBankValid() {
-        if (!bankSelect || bankSelect.value === '') return false;
-        if (bankSelect.value === 'other') {
-            return otherBankInput && otherBankInput.value.trim().length >= 3;
+        if (!isValid && inputEl.value.trim().length > 0) {
+            inputEl.classList.add('input-invalid');
+            if (errorEl) {
+                errorEl.textContent = msg;
+                errorEl.classList.add('show-error');
+            }
+        } else {
+            inputEl.classList.remove('input-invalid');
+            if (errorEl) {
+                errorEl.classList.remove('show-error');
+            }
         }
-        return true;
     }
 
-    // Master Validator evaluating active tab + Email + Cart Not Empty
-    function validateFormByActiveTab() {
+    // Master Form Validation
+    function validateForm() {
         if (!payBtn) return;
 
-        const emailOk = isEmailValid();
-        const cartNotEmpty = getCart().length > 0;
+        // 1. Email check
+        const emailVal = emailInput ? emailInput.value.trim() : '';
+        const emailOk = emailVal.includes('@') && emailVal.includes('.');
+        toggleError(emailInput, 'emailError', emailOk, 'Please enter a valid email address.');
 
+        const cartOk = getCartItems().length > 0;
         let tabOk = false;
 
-        if (currentActiveTab === 'cards') {
-            tabOk = isCardValid() && isExpiryValid() && isCvvValid() && isZipValid();
-        } else if (currentActiveTab === 'crypto') {
-            tabOk = isCryptoValid();
-        } else if (currentActiveTab === 'bank') {
-            tabOk = isBankValid();
-        } else if (currentActiveTab === 'upi') {
-            tabOk = isUpiValid();
+        // 2. Active Tab Validation
+        if (activeTab === 'cards') {
+            const rawCard = cardNum ? cardNum.value.replace(/\D/g, '') : '';
+            const cardOk = rawCard.length === 16; // STRICT 16 digits
+            toggleError(cardNum, 'cardError', cardOk, 'Card number must be exactly 16 digits.');
+
+            const expVal = cardExp ? cardExp.value.trim() : '';
+            const expOk = /^(0[1-9]|1[0-2])\/\d{2}$/.test(expVal);
+            toggleError(cardExp, 'expError', expOk, 'Format must be MM/YY.');
+
+            const cvvVal = cardCvv ? cardCvv.value.trim() : '';
+            const cvvOk = cvvVal.length === 3 && /^\d{3}$/.test(cvvVal); // STRICT 3 digits
+            toggleError(cardCvv, 'cvvError', cvvOk, 'CVV must be 3 digits.');
+
+            const zipVal = cardZip ? cardZip.value.trim() : '';
+            const zipOk = zipVal.length === 6 && /^\d{6}$/.test(zipVal); // STRICT 6 digits
+            toggleError(cardZip, 'zipError', zipOk, 'Zip code must be 6 digits.');
+
+            tabOk = cardOk && expOk && cvvOk && zipOk;
+
+        } else if (activeTab === 'crypto') {
+            const selOk = cryptoSelect && cryptoSelect.value !== '';
+            const txVal = cryptoTx ? cryptoTx.value.trim() : '';
+            const txOk = txVal.length >= 8;
+            toggleError(cryptoTx, 'cryptoError', txOk, 'Wallet address/TxID must be at least 8 characters.');
+
+            tabOk = selOk && txOk;
+
+        } else if (activeTab === 'bank') {
+            if (bankSelect && bankSelect.value === 'other') {
+                const otherVal = otherBankInput ? otherBankInput.value.trim() : '';
+                const bankOk = otherVal.length >= 3;
+                toggleError(otherBankInput, 'bankError', bankOk, 'Please enter bank name.');
+                tabOk = bankOk;
+            } else {
+                tabOk = bankSelect && bankSelect.value !== '';
+            }
+
+        } else if (activeTab === 'upi') {
+            const upiVal = upiInput ? upiInput.value.trim() : '';
+            const upiOk = upiVal.includes('@') && upiVal.length >= 5;
+            toggleError(upiInput, 'upiError', upiOk, 'Enter valid UPI ID (e.g. user@upi).');
+
+            tabOk = upiOk;
         }
 
-        if (emailOk && tabOk && cartNotEmpty) {
+        // Enable or Disable Pay Now button
+        if (emailOk && tabOk && cartOk) {
             payBtn.removeAttribute('disabled');
-            payBtn.classList.add('valid-ready');
         } else {
             payBtn.setAttribute('disabled', 'true');
-            payBtn.classList.remove('valid-ready');
         }
     }
 
-    // Attach listener to all form input elements
-    const allInputs = document.querySelectorAll('.form-input, .select-input');
-    allInputs.forEach(input => {
-        input.addEventListener('input', validateFormByActiveTab);
-        input.addEventListener('change', validateFormByActiveTab);
+    // Add input event listeners to all fields
+    const inputs = document.querySelectorAll('.form-input, .select-input');
+    inputs.forEach(input => {
+        input.addEventListener('input', validateForm);
+        input.addEventListener('change', validateForm);
     });
 
-    validateFormByActiveTab();
+    validateForm();
 
-    // Form Submission Handler
+    // Simulated Payment Modal Trigger
     if (payBtn) {
-        payBtn.addEventListener('click', (e) => {
+        payBtn.addEventListener('click', function(e) {
             e.preventDefault();
             if (payBtn.hasAttribute('disabled')) return;
 
-            payBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
-            payBtn.style.pointerEvents = 'none';
+            // Generate Simulated Order Receipt
+            const randomOrderId = '#NIKE-' + Math.floor(10000 + Math.random() * 90000);
+            const totalAmountStr = document.querySelector('.total-val') ? document.querySelector('.total-val').textContent : '₹ 0';
 
-            setTimeout(() => {
-                showToast('Payment Successful! Order Confirmed.');
-                localStorage.removeItem(CART_STORAGE_KEY);
+            const modalOverlay = document.getElementById('paymentModal');
+            const modalBody = document.getElementById('modalContent');
+
+            if (modalOverlay && modalBody) {
+                modalOverlay.classList.add('active-modal');
+
+                // Step 1: Processing state
+                modalBody.innerHTML = `
+                    <div class="modal-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i></div>
+                    <h3 class="modal-title">Processing Payment...</h3>
+                    <p style="font-size:0.85rem; color:var(--text-muted);">Communicating with simulated payment gateway.</p>
+                `;
+
+                // Step 2: Confirmation state after 2 seconds
                 setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1600);
-            }, 2000);
+                    modalBody.innerHTML = `
+                        <div style="font-size:3rem; color:var(--success-green); margin-bottom:0.5rem;">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <h3 class="modal-title">Payment Successful!</h3>
+                        <div class="modal-details">
+                            <div><strong>Order ID:</strong> ${randomOrderId}</div>
+                            <div><strong>Payment Method:</strong> ${activeTab.toUpperCase()}</div>
+                            <div><strong>Amount Paid:</strong> ${totalAmountStr}</div>
+                            <div><strong>Status:</strong> Approved</div>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">Redirecting to home page...</p>
+                    `;
+
+                    // Clear cart storage and redirect
+                    localStorage.removeItem(CART_KEY);
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2200);
+                }, 2000);
+            }
         });
     }
 }
