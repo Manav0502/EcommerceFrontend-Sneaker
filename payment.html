@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nike Store - Checkout & Payment</title>
 
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Stylesheet & Script -->
+    <!-- CSS Stylesheet & Vanilla JS -->
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -67,15 +66,16 @@
                 <div class="payment-left-col">
                     
                     <div class="checkout-card">
-                        <h2 class="card-title"><i class="fa-solid fa-envelope"></i> Contact Details</h2>
+                        <h2 class="card-title"><i class="fa-solid fa-envelope" style="color:var(--primary-red);"></i> Contact Details</h2>
                         <div class="form-group">
                             <label for="customerEmail" class="form-label">Email Address *</label>
                             <input type="email" id="customerEmail" placeholder="customer@example.com" class="form-input">
+                            <small class="error-text" id="emailError"></small>
                         </div>
                     </div>
 
                     <div class="checkout-card">
-                        <h2 class="card-title"><i class="fa-solid fa-credit-card"></i> Payment Method</h2>
+                        <h2 class="card-title"><i class="fa-solid fa-credit-card" style="color:var(--primary-red);"></i> Payment Method</h2>
                         
                         <div class="payment-methods-tabs">
                             <button class="method-tab active" data-method="cards">
@@ -99,18 +99,21 @@
                         <!-- PANEL 1: CARDS -->
                         <div class="payment-panel active-panel" id="panel-cards">
                             <div class="form-group">
-                                <label for="cardNumber" class="form-label">Card Number (Exactly 16 Digits) *</label>
+                                <label for="cardNumber" class="form-label">Card Number (16 Digits) *</label>
                                 <input type="text" id="cardNumber" placeholder="1234 5678 9101 1121" maxlength="19" class="form-input">
+                                <small class="error-text" id="cardError"></small>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="cardExpiry" class="form-label">Expiry (MM/YY) *</label>
                                     <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" class="form-input">
+                                    <small class="error-text" id="expError"></small>
                                 </div>
                                 <div class="form-group">
                                     <label for="cardCvv" class="form-label">CVV (3 Digits) *</label>
                                     <input type="password" id="cardCvv" placeholder="123" maxlength="3" class="form-input">
+                                    <small class="error-text" id="cvvError"></small>
                                 </div>
                             </div>
 
@@ -126,15 +129,15 @@
                                 <div class="form-group">
                                     <label for="cardZip" class="form-label">Zip Code (6 Digits) *</label>
                                     <input type="text" id="cardZip" placeholder="110001" maxlength="6" class="form-input">
+                                    <small class="error-text" id="zipError"></small>
                                 </div>
                             </div>
                         </div>
 
                         <!-- PANEL 2: CRYPTO -->
                         <div class="payment-panel" id="panel-crypto">
-                            <div class="crypto-address-box">
-                                <div class="crypto-addr-title"><i class="fa-brands fa-ethereum"></i> Store Crypto Wallet:</div>
-                                <div class="crypto-addr-value">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</div>
+                            <div style="background:var(--soft-bg); border:1px dashed var(--primary-red); padding:0.8rem; border-radius:6px; margin-bottom:1rem; font-size:0.85rem;">
+                                <strong>Store Wallet Address:</strong> <code style="word-break:break-all;">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</code>
                             </div>
 
                             <div class="form-group">
@@ -143,23 +146,23 @@
                                     <option value="" disabled selected>Choose Crypto...</option>
                                     <option value="BTC">Bitcoin (BTC)</option>
                                     <option value="ETH">Ethereum (ETH)</option>
-                                    <option value="USDT">Tether (USDT TRC20)</option>
+                                    <option value="USDT">Tether (USDT)</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="cryptoTxInput" class="form-label">Wallet Address / TxID *</label>
-                                <input type="text" id="cryptoTxInput" placeholder="Enter your transaction hash or wallet address" class="form-input">
-                                <span class="helper-hint">Minimum 8 characters required</span>
+                                <label for="cryptoTxInput" class="form-label">TxID / Wallet Address *</label>
+                                <input type="text" id="cryptoTxInput" placeholder="Enter transaction hash or wallet ID" class="form-input">
+                                <small class="error-text" id="cryptoError"></small>
                             </div>
                         </div>
 
                         <!-- PANEL 3: BANK / NET BANKING -->
                         <div class="payment-panel" id="panel-bank">
                             <div class="form-group">
-                                <label for="bankSelect" class="form-label">Select Net Banking Bank *</label>
+                                <label for="bankSelect" class="form-label">Select Bank *</label>
                                 <select id="bankSelect" class="form-input select-input">
-                                    <option value="" disabled selected>Select Bank...</option>
+                                    <option value="" disabled selected>Choose Bank...</option>
                                     <option value="sbi">State Bank of India (SBI)</option>
                                     <option value="hdfc">HDFC Bank</option>
                                     <option value="icici">ICICI Bank</option>
@@ -169,17 +172,18 @@
                             </div>
 
                             <div class="form-group" id="otherBankGroup" style="display: none;">
-                                <label for="otherBankName" class="form-label">Type Bank Name *</label>
-                                <input type="text" id="otherBankName" placeholder="Enter your bank name" class="form-input">
+                                <label for="otherBankName" class="form-label">Enter Bank Name *</label>
+                                <input type="text" id="otherBankName" placeholder="Type your bank name" class="form-input">
+                                <small class="error-text" id="bankError"></small>
                             </div>
                         </div>
 
                         <!-- PANEL 4: UPI -->
                         <div class="payment-panel" id="panel-upi">
                             <div class="form-group">
-                                <label for="upiIdInput" class="form-label">Enter Virtual Payment Address (UPI ID) *</label>
-                                <input type="text" id="upiIdInput" placeholder="e.g. username@upi or mobile@paytm" class="form-input">
-                                <span class="helper-hint">Must contain @ symbol (e.g. user@okicici)</span>
+                                <label for="upiIdInput" class="form-label">UPI ID (Virtual Payment Address) *</label>
+                                <input type="text" id="upiIdInput" placeholder="username@upi or mobile@paytm" class="form-input">
+                                <small class="error-text" id="upiError"></small>
                             </div>
                         </div>
 
@@ -194,17 +198,17 @@
                         <div class="summary-details">
                             <div class="summary-row">
                                 <span>Sub Total</span>
-                                <span class="summary-val summary-subtotal">₹ 0</span>
+                                <span class="summary-subtotal" style="font-weight:600; color:var(--text-color);">₹ 0</span>
                             </div>
                             <div class="summary-row">
                                 <span>Taxes (18% GST)</span>
-                                <span class="summary-val summary-tax">₹ 0</span>
+                                <span class="summary-tax" style="font-weight:600; color:var(--text-color);">₹ 0</span>
                             </div>
-                            <div class="summary-row discount-row">
+                            <div class="summary-row" style="color:var(--primary-red);">
                                 <span>Discount</span>
-                                <span class="summary-val summary-discount">- ₹ 0</span>
+                                <span class="summary-discount" style="font-weight:600;">- ₹ 0</span>
                             </div>
-                            <hr class="summary-divider">
+                            <hr style="border:0; height:1px; background:var(--border-color); margin:0.3rem 0;">
                             <div class="summary-row total-row">
                                 <span>Total</span>
                                 <span class="total-val">₹ 0</span>
@@ -215,15 +219,8 @@
                             Pay Now <span class="pay-now-amount">₹ 0</span>
                         </button>
 
-                        <div class="trust-badge-container">
-                            <div class="secured-tag">
-                                <i class="fa-solid fa-shield-halved"></i>
-                                <span>100% Secure Transaction</span>
-                            </div>
-                            <div class="razorpay-badge-box">
-                                <i class="fa-solid fa-lock"></i>
-                                <span class="razorpay-text">Powered by <strong>Razorpay</strong></span>
-                            </div>
+                        <div style="text-align:center; margin-top:1rem; font-size:0.8rem; color:var(--text-muted);">
+                            <i class="fa-solid fa-shield-halved" style="color:var(--success-green);"></i> 100% Secure Gateway Simulation
                         </div>
 
                     </div>
@@ -233,6 +230,15 @@
 
         </div>
     </main>
+
+    <!-- Simulated Payment Gateway Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-box">
+            <div id="modalContent">
+                <!-- Injected dynamically by script.js -->
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
