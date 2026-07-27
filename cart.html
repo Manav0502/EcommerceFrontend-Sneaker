@@ -12,13 +12,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Stylesheet -->
+    <!-- Main Stylesheet & Script -->
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="images/logo.png" type="image/x-icon">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <!-- header navbar -->
+    <!-- Header Navigation Bar -->
     <header class="main-header">
         <nav class="navbar">
             <div class="nav-logo">
@@ -28,13 +28,15 @@
                 </a>
             </div>
 
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="product.html" class="nav-link">Products</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">More</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
-            </ul>
+            <div class="nav-menu-wrapper">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="product.html" class="nav-link">Products</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">More</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
 
             <div class="nav-actions">
                 <div class="search-box">
@@ -43,16 +45,18 @@
                 </div>
                 <a href="cart.html" class="icon-btn cart-btn" aria-label="Shopping Cart">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="cart-badge">3</span>
+                    <span class="cart-badge">0</span>
                 </a>
                 <div class="profile-avatar">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User Profile" class="avatar-img">
                 </div>
+                <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
         </nav>
     </header>
 
-    <!-- shopping cart page content -->
     <main class="cart-page-main">
         <div class="cart-container">
             
@@ -60,7 +64,6 @@
 
             <div class="cart-layout">
                 
-                <!-- left container: cart item table -->
                 <div class="cart-left-col">
                     <div class="cart-table-wrapper">
                         <table class="cart-table">
@@ -73,80 +76,53 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="product-cell">
-                                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=200&q=80" alt="Nike Air Max Alpha Trainer 5" class="cart-item-img">
-                                        <div class="cart-item-meta">
-                                            <h4 class="cart-item-title">Nike Air Max Alpha Trainer 5</h4>
-                                            <span class="cart-item-color">Color: Red</span>
-                                        </div>
-                                    </td>
-                                    <td class="quantity-cell">
-                                        <div class="cart-qty-box">
-                                            <button class="qty-step-btn">-</button>
-                                            <span class="qty-val">3</span>
-                                            <button class="qty-step-btn">+</button>
-                                        </div>
-                                    </td>
-                                    <td class="price-cell">₹ 4,002</td>
-                                    <td class="remove-cell">
-                                        <button class="remove-btn" aria-label="Remove item">
-                                            <i class="fa-solid fa-xmark"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <!-- Rendered dynamically by script.js -->
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- bottom link: continue shopping -->
                     <div class="continue-shopping-box">
-                        <a href="index.html" class="continue-link">
+                        <a href="product.html" class="continue-link">
                             <i class="fa-solid fa-chevron-left"></i> Continue Shopping
                         </a>
                     </div>
                 </div>
 
-                <!-- right container: coupon card & summary -->
                 <div class="cart-right-col">
                     <div class="summary-card">
                         
-                        <!-- coupon box -->
                         <div class="coupon-box">
                             <label for="couponCode" class="coupon-label">Enter Coupon Code</label>
                             <div class="coupon-input-group">
-                                <input type="text" id="couponCode" placeholder="Enter Coupon Code" class="coupon-input">
+                                <input type="text" id="couponCode" placeholder="Try NIKE10" class="coupon-input">
                                 <button class="btn-apply-coupon">Apply Coupon</button>
                             </div>
                         </div>
 
-                        <!-- calculation breakdown -->
                         <div class="summary-details">
                             <div class="summary-row">
                                 <span>Sub Total</span>
-                                <span class="summary-val">₹ 4,002</span>
+                                <span class="summary-val summary-subtotal">₹ 0</span>
                             </div>
                             <div class="summary-row">
                                 <span>Taxes (18% GST)</span>
-                                <span class="summary-val">₹ 720</span>
+                                <span class="summary-val summary-tax">₹ 0</span>
                             </div>
                             <div class="summary-row discount-row">
                                 <span>Discount</span>
-                                <span class="summary-val">- ₹ 223</span>
+                                <span class="summary-val summary-discount">- ₹ 0</span>
                             </div>
                             <hr class="summary-divider">
                             <div class="summary-row total-row">
                                 <span>Total</span>
-                                <span class="total-val">₹ 4,499</span>
+                                <span class="total-val">₹ 0</span>
                             </div>
                         </div>
 
-                        <!-- pay now button -->
                         <a href="payment.html" class="btn-pay-now">
-                            Pay Now ₹ 4,499
+                            Pay Now <span class="pay-now-amount">₹ 0</span>
                         </a>
 
-                        <!-- razorpay trust badges -->
                         <div class="trust-badge-container">
                             <div class="secured-tag">
                                 <i class="fa-solid fa-shield-halved"></i>
