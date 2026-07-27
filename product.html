@@ -12,13 +12,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Stylesheet -->
+    <!-- Main Stylesheet & Script -->
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="images/logo.png" type="image/x-icon">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
-    <!-- header navbar -->
+    <!-- Header Navigation Bar -->
     <header class="main-header">
         <nav class="navbar">
             <div class="nav-logo">
@@ -28,13 +28,15 @@
                 </a>
             </div>
 
-            <ul class="nav-menu">
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link active">Products</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">More</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
-            </ul>
+            <div class="nav-menu-wrapper">
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="product.html" class="nav-link active">Products</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Brands</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">More</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+                </ul>
+            </div>
 
             <div class="nav-actions">
                 <div class="search-box">
@@ -43,37 +45,37 @@
                 </div>
                 <a href="cart.html" class="icon-btn cart-btn" aria-label="Shopping Cart">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="cart-badge">3</span>
+                    <span class="cart-badge">0</span>
                 </a>
                 <div class="profile-avatar">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="User Profile" class="avatar-img">
                 </div>
+                <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
         </nav>
     </header>
 
-    <!-- main content -->
     <main class="product-page-main">
         <div class="product-container">
             
-            <!-- breadcrumb path -->
             <nav class="breadcrumb-nav">
                 <ul class="breadcrumb-list">
-                    <li><a href="product.html">Product</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><i class="fa-solid fa-chevron-right"></i></li>
+                    <li><a href="product.html">Products</a></li>
                     <li><i class="fa-solid fa-chevron-right"></i></li>
                     <li class="active">Nike Air Max Alpha Trainer 5</li>
                 </ul>
             </nav>
 
-            <!-- product details section -->
             <section class="product-display-section">
-                
-                <!-- left column: color and main image -->
                 <div class="product-media-col">
                     <div class="color-selection-bar">
-                        <span class="color-label">Select Color:</span>
+                        <span class="color-label">Color:</span>
                         <div class="color-options">
-                            <button class="color-btn color-red active">Red</button>
+                            <button class="color-btn">Red</button>
                         </div>
                     </div>
                     
@@ -82,7 +84,6 @@
                     </div>
                 </div>
 
-                <!-- right column: description, price, quantity & buttons -->
                 <div class="product-info-col">
                     <h1 class="product-title">Nike Air Max Alpha Trainer 5</h1>
                     <p class="product-short-desc">
@@ -97,19 +98,15 @@
                         <p class="tax-info">Inclusive of all Taxes</p>
                     </div>
 
-                    <!-- quantity dropdown -->
                     <div class="quantity-wrapper">
                         <span class="qty-label">Quantity:</span>
-                        <select class="quantity-dropdown">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3" selected>3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
+                        <div class="interactive-qty-box">
+                            <button class="qty-btn qty-btn-minus">-</button>
+                            <span class="qty-display">1</span>
+                            <button class="qty-btn qty-btn-plus">+</button>
+                        </div>
                     </div>
 
-                    <!-- action buttons -->
                     <div class="product-action-buttons">
                         <button class="btn btn-add-cart">
                             <i class="fa-solid fa-cart-plus"></i> ADD TO CART
@@ -119,33 +116,22 @@
                         </a>
                     </div>
                 </div>
-
             </section>
 
-            <!-- horizontal scroll gallery: 8 angle views of the same shoe -->
             <section class="product-gallery-section">
                 <h3 class="gallery-heading">Product Angles & Views</h3>
                 <div class="scroll-gallery-container">
-                    <div class="gallery-card">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80" alt="Angle 1 - Profile Side View">
+                    <div class="gallery-card active-thumb">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=80" alt="Angle 1 Side View">
                     </div>
                     <div class="gallery-card">
-                        <img src="images/1.jpg" alt="Angle 2 - Front Toe View">
+                        <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=500&q=80" alt="Angle 2 Toe View">
                     </div>
                     <div class="gallery-card">
-                        <img src="images/12.jpg" alt="Angle 3 - Bottom Sole Traction View">
+                        <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=500&q=80" alt="Angle 3 Sole View">
                     </div>
                     <div class="gallery-card">
-                        <img src="images/3.jpg" alt="Angle 4 - Heel & Ankle View">
-                    </div>
-                    <div class="gallery-card">
-                        <img src="images/14.jpg" alt="Angle 5 - Opposite Profile View">
-                    </div>
-                    <div class="gallery-card">
-                        <img src="images/5.jpg" alt="Angle 6 - Top Down Perspective">
-                    </div>
-                    <div class="gallery-card">
-                        <img src="images/16.jpg" alt="Angle 7 - Lace Close Up">
+                        <img src="https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=500&q=80" alt="Angle 4 Heel View">
                     </div>
                 </div>
             </section>
