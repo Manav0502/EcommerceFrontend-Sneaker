@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nike Store - Nike Air Max Alpha Trainer 5</title>
 
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Stylesheet & Script -->
+    <!-- CSS Stylesheet & Vanilla JS -->
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -72,11 +71,8 @@
 
             <section class="product-display-section">
                 <div class="product-media-col">
-                    <div class="color-selection-bar">
-                        <span class="color-label">Color:</span>
-                        <div class="color-options">
-                            <button class="color-btn">Red</button>
-                        </div>
+                    <div style="margin-bottom:1rem; font-size:0.9rem; font-weight:600;">
+                        Color: <span style="color:var(--primary-red);">Red</span>
                     </div>
                     
                     <div class="main-image-card">
@@ -90,16 +86,14 @@
                         Finish your workout strong with cushioned support and responsive agility. Features breathable mesh, intense heel support, and non-slip rubber outsoles.
                     </p>
 
-                    <div class="product-price-wrapper">
-                        <div class="price-row">
-                            <span class="current-price">₹ 1,334/-</span>
-                            <span class="discount-badge">Save 12%</span>
-                        </div>
-                        <p class="tax-info">Inclusive of all Taxes</p>
+                    <div>
+                        <span class="current-price">₹ 1,334/-</span>
+                        <span style="font-size:0.8rem; background:var(--soft-bg); color:var(--primary-red); padding:0.2rem 0.5rem; border-radius:4px; font-weight:700; margin-left:0.5rem;">Save 12%</span>
+                        <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Inclusive of all Taxes</p>
                     </div>
 
                     <div class="quantity-wrapper">
-                        <span class="qty-label">Quantity:</span>
+                        <span style="font-weight:600; font-size:0.9rem;">Quantity:</span>
                         <div class="interactive-qty-box">
                             <button class="qty-btn qty-btn-minus">-</button>
                             <span class="qty-display">1</span>
