@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nike Store - Shopping Cart</title>
 
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Main Stylesheet & Script -->
+    <!-- CSS Stylesheet & Vanilla JS -->
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
@@ -81,8 +80,8 @@
                         </table>
                     </div>
 
-                    <div class="continue-shopping-box">
-                        <a href="product.html" class="continue-link">
+                    <div style="margin-top:1rem;">
+                        <a href="product.html" style="color:var(--primary-red); font-weight:600; font-size:0.9rem;">
                             <i class="fa-solid fa-chevron-left"></i> Continue Shopping
                         </a>
                     </div>
@@ -92,46 +91,39 @@
                     <div class="summary-card">
                         
                         <div class="coupon-box">
-                            <label for="couponCode" class="coupon-label">Enter Coupon Code</label>
+                            <label for="couponCode" style="font-size:0.85rem; font-weight:600;">Enter Coupon Code</label>
                             <div class="coupon-input-group">
                                 <input type="text" id="couponCode" placeholder="Try NIKE10" class="coupon-input">
-                                <button class="btn-apply-coupon">Apply Coupon</button>
+                                <button class="btn-apply-coupon">Apply</button>
                             </div>
                         </div>
 
                         <div class="summary-details">
                             <div class="summary-row">
                                 <span>Sub Total</span>
-                                <span class="summary-val summary-subtotal">₹ 0</span>
+                                <span class="summary-subtotal" style="font-weight:600; color:var(--text-color);">₹ 0</span>
                             </div>
                             <div class="summary-row">
                                 <span>Taxes (18% GST)</span>
-                                <span class="summary-val summary-tax">₹ 0</span>
+                                <span class="summary-tax" style="font-weight:600; color:var(--text-color);">₹ 0</span>
                             </div>
-                            <div class="summary-row discount-row">
+                            <div class="summary-row" style="color:var(--primary-red);">
                                 <span>Discount</span>
-                                <span class="summary-val summary-discount">- ₹ 0</span>
+                                <span class="summary-discount" style="font-weight:600;">- ₹ 0</span>
                             </div>
-                            <hr class="summary-divider">
+                            <hr style="border:0; height:1px; background:var(--border-color); margin:0.3rem 0;">
                             <div class="summary-row total-row">
                                 <span>Total</span>
                                 <span class="total-val">₹ 0</span>
                             </div>
                         </div>
 
-                        <a href="payment.html" class="btn-pay-now">
+                        <a href="payment.html" class="btn-pay-now" style="text-align:center; display:block;">
                             Pay Now <span class="pay-now-amount">₹ 0</span>
                         </a>
 
-                        <div class="trust-badge-container">
-                            <div class="secured-tag">
-                                <i class="fa-solid fa-shield-halved"></i>
-                                <span>100% Secure Checkout</span>
-                            </div>
-                            <div class="razorpay-badge-box">
-                                <i class="fa-solid fa-lock"></i>
-                                <span class="razorpay-text">Powered by <strong>Razorpay</strong></span>
-                            </div>
+                        <div style="text-align:center; margin-top:1rem; font-size:0.8rem; color:var(--text-muted);">
+                            <i class="fa-solid fa-lock" style="color:var(--primary-red);"></i> Powered by <strong>Razorpay</strong>
                         </div>
 
                     </div>
